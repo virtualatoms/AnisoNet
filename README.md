@@ -5,7 +5,6 @@ AnisoNet is an equivariant graph neural network used to predict the dielectric t
 ## Installation
 ```
 git clone https://github.com/virtualatoms/AnisoNet.git
-cd AnisoNet
 ```
 Then to install the packages, run:
 ```
