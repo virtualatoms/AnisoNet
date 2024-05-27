@@ -35,7 +35,6 @@ If you use AnisoNet in your work, please cite it as follows:
 ```
 @misc{lou_discovery_2024,
 	title = {Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks},
-	urldate = {2024-05-22},
 	publisher = {arXiv},
 	author = {Lou, Yuchen and Ganose, Alex M.},
 	month = may,
