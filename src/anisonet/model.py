@@ -1,22 +1,23 @@
+"""Definitions of AnisoNet models."""
+
 from __future__ import annotations
 
 import math
-from typing import Callable
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from e3nn import o3
 from e3nn.math import soft_one_hot_linspace
-from e3nn.nn import Activation, FullyConnectedNet, Gate
+from e3nn.nn import FullyConnectedNet, Gate
 from e3nn.nn.models.v2106.gate_points_message_passing import (
-    MessagePassing,
     tp_path_exists,
 )
 from e3nn.o3 import FullyConnectedTensorProduct, TensorProduct
 from e3nn.util.jit import compile_mode
 
 from valml.scatter import scatter_mean
+
 
 @compile_mode("script")
 class Convolution(torch.nn.Module):
@@ -154,7 +155,8 @@ class CustomCompose(torch.nn.Module):
 
 
 class E3nnModel(torch.nn.Module):
-    r"""equivariant neural network
+    r"""equivariant neural network.
+
     Parameters
     ----------
     irreps_in : `e3nn.o3.Irreps` or None
@@ -185,11 +187,12 @@ class E3nnModel(torch.nn.Module):
     num_neighbors : float
         typical number of nodes at a distance ``max_radius``
     num_nodes : float
-        typical number of nodes in a graph
+        typical number of nodes in a graph.
     """
+
     def __init__(
         self,
-        in_dim, 
+        in_dim,
         em_dim,
         in_attr_dim,
         em_attr_dim,
@@ -203,10 +206,10 @@ class E3nnModel(torch.nn.Module):
         number_of_basis=10,
         radial_layers=1,
         radial_neurons=100,
-        num_neighbors=1.,
-        num_nodes=1.,
+        num_neighbors=1.0,
+        num_nodes=1.0,
         reduce_output=True,
-        same_em_layer=True
+        same_em_layer=True,
     ) -> None:
         super().__init__()
         self.mul = mul
@@ -217,22 +220,22 @@ class E3nnModel(torch.nn.Module):
         self.num_nodes = num_nodes
         self.reduce_output = reduce_output
 
-        self.irreps_in = o3.Irreps(str(em_dim)+"x0e")
-        self.irreps_node_attr = o3.Irreps(str(em_attr_dim)+"x0e")
-        
-        self.irreps_hidden = o3.Irreps([(self.mul, (l, p)) for l in range(lmax + 1) for p in [-1, 1]])
+        self.irreps_in = o3.Irreps(str(em_dim) + "x0e")
+        self.irreps_node_attr = o3.Irreps(str(em_attr_dim) + "x0e")
+
+        self.irreps_hidden = o3.Irreps(
+            [(self.mul, (L, p)) for L in range(lmax + 1) for p in [-1, 1]]
+        )
         self.irreps_out = o3.Irreps(irreps_out)
         self.irreps_edge_attr = o3.Irreps.spherical_harmonics(lmax)
 
         self.reduce_output = reduce_output
         self.same_em_layer = same_em_layer
 
-        
         self.em = nn.Linear(in_dim, em_dim)
-        if same_em_layer == False:
+        if same_em_layer is False:
             self.em_attr = nn.Linear(in_attr_dim, em_attr_dim)
-        
-        
+
         irreps = self.irreps_in if self.irreps_in is not None else o3.Irreps("0e")
 
         act = {
@@ -247,15 +250,29 @@ class E3nnModel(torch.nn.Module):
         self.layers = torch.nn.ModuleList()
 
         for _ in range(layers):
-            irreps_scalars = o3.Irreps([(mul, ir) for mul, ir in self.irreps_hidden if ir.l == 0 and tp_path_exists(irreps, self.irreps_edge_attr, ir)])
-            irreps_gated = o3.Irreps([(mul, ir) for mul, ir in self.irreps_hidden if ir.l > 0 and tp_path_exists(irreps, self.irreps_edge_attr, ir)])
+            irreps_scalars = o3.Irreps(
+                [
+                    (mul, ir)
+                    for mul, ir in self.irreps_hidden
+                    if ir.l == 0 and tp_path_exists(irreps, self.irreps_edge_attr, ir)
+                ]
+            )
+            irreps_gated = o3.Irreps(
+                [
+                    (mul, ir)
+                    for mul, ir in self.irreps_hidden
+                    if ir.l > 0 and tp_path_exists(irreps, self.irreps_edge_attr, ir)
+                ]
+            )
             ir = "0e" if tp_path_exists(irreps, self.irreps_edge_attr, "0e") else "0o"
             irreps_gates = o3.Irreps([(mul, ir) for mul, _ in irreps_gated])
 
             gate = Gate(
-                irreps_scalars, [act[ir.p] for _, ir in irreps_scalars],  # scalar
-                irreps_gates, [act_gates[ir.p] for _, ir in irreps_gates],  # gates (scalars)
-                irreps_gated  # gated tensors
+                irreps_scalars,
+                [act[ir.p] for _, ir in irreps_scalars],  # scalar
+                irreps_gates,
+                [act_gates[ir.p] for _, ir in irreps_gates],  # gates (scalars)
+                irreps_gated,  # gated tensors
             )
             conv = Convolution(
                 irreps,
@@ -265,7 +282,7 @@ class E3nnModel(torch.nn.Module):
                 number_of_basis,
                 radial_layers,
                 radial_neurons,
-                num_neighbors
+                num_neighbors,
             )
             irreps = gate.irreps_out
             self.layers.append(CustomCompose(conv, gate))
@@ -279,12 +296,13 @@ class E3nnModel(torch.nn.Module):
                 number_of_basis,
                 radial_layers,
                 radial_neurons,
-                num_neighbors
+                num_neighbors,
             )
         )
 
     def forward(self, data) -> torch.Tensor:
-        """evaluate the network
+        """Evaluate the network.
+
         Parameters
         ----------
         data : `torch_geometric.data.Data` or dict
@@ -292,39 +310,46 @@ class E3nnModel(torch.nn.Module):
             - ``pos`` the position of the nodes (atoms)
             - ``x`` the input features of the nodes, optional
             - ``z`` the attributes of the nodes, for instance the atom type, optional
-            - ``batch`` the graph to which the node belong, optional
+            - ``batch`` the graph to which the node belong, optional.
         """
-
         node_input = F.relu(self.em(data.node_input))
 
         if self.same_em_layer:
             node_attr = F.relu(self.em(data.node_attr))
         else:
             node_attr = F.relu(self.em_attr(data.node_attr))
-    
+
         edge_src, edge_dst = data.edge_index
         edge_vec = data.edge_vec
-        node_inputs = data.node_input
-        
-        edge_sh = o3.spherical_harmonics(self.irreps_edge_attr, edge_vec, True, normalization='component')
+
+        edge_sh = o3.spherical_harmonics(
+            self.irreps_edge_attr, edge_vec, True, normalization="component"
+        )
         edge_length = edge_vec.norm(dim=1)
         edge_length_embedded = soft_one_hot_linspace(
             x=edge_length,
             start=0.0,
             end=self.max_radius,
             number=self.number_of_basis,
-            basis='gaussian',
-            cutoff=False
+            basis="gaussian",
+            cutoff=False,
         ).mul(self.number_of_basis**0.5)
         edge_attr = smooth_cutoff(edge_length / self.max_radius)[:, None] * edge_sh
 
         for lay in self.layers:
-            node_input = lay(node_input, node_attr, edge_src, edge_dst, edge_attr, edge_length_embedded)
+            node_input = lay(
+                node_input,
+                node_attr,
+                edge_src,
+                edge_dst,
+                edge_attr,
+                edge_length_embedded,
+            )
 
         if self.reduce_output:
             return scatter_mean(node_input, data.batch, dim=0)
-        else:
-            return node_input
+
+        return node_input
 
 
 def smooth_cutoff(x):
@@ -334,6 +359,7 @@ def smooth_cutoff(x):
     y[u > 0] = 0
     y[u < -1] = 1
     return y
+
 
 def scatter(src: torch.Tensor, index: torch.Tensor, dim_size: int) -> torch.Tensor:
     """Apply special case of torch_scatter.scatter with dim=0."""

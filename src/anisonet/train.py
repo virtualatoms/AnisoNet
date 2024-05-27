@@ -1,13 +1,14 @@
+"""Tools for training models using lightning."""
+
 from __future__ import annotations
 
 from typing import Any, Callable
 
-import torch
 import lightning.pytorch as pl
+import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
-
 from utils_data import collate_fn
 
 
@@ -51,10 +52,9 @@ class BaseLightning(pl.LightningModule):
 
         self.callbacks = callbacks
         if optimizer is not None:
-            self.lr=optimizer.state_dict()['param_groups'][0]['lr']
-        else:    
+            self.lr = optimizer.state_dict()["param_groups"][0]["lr"]
+        else:
             self.lr = lr
-
 
     def forward(self, *args, **kwargs):
         """Pass data through the model."""

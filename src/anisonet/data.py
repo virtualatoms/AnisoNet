@@ -1,26 +1,20 @@
+"""Classes for loading in a dataset."""
+
 from __future__ import annotations
 
-from ase import Atom, Atoms
-from numpy import array
+import gzip
+import json
 from dataclasses import dataclass
-import torch
-from torch.utils.data import Dataset
-import pandas as pd
-import numpy as np
 from pathlib import Path
-from tqdm.auto import tqdm
 
+import torch
+from ase import Atom, Atoms
+from ase.neighborlist import neighbor_list
+from torch.utils.data import Dataset
+from tqdm.auto import tqdm
 
 specie_am = [Atom(z).mass for z in range(1, 119)]
 am_onehot = torch.diag(torch.tensor(specie_am)).tolist()
-
-def load_data(filename, ct):
-    df = pd.read_csv(filename)
-    df['structure'] = df['structure'].map(lambda x: Atoms.fromdict(eval(x)))    
-    cart_tensors = np.array([eval(x) for x in df["dielectric_tensor"]])
-    representation = ct.from_cartesian(torch.from_numpy(cart_tensors))
-    df["dielectric_irreps"] = representation.tolist()
-    return df
 
 
 @dataclass
@@ -55,6 +49,7 @@ class Data:
             if k == "idx":
                 continue
             self.__dict__[k] = v.to(device=device, non_blocking=non_blocking)
+
 
 @dataclass
 class Batch:
@@ -93,6 +88,7 @@ class Batch:
         for k, v in self.__dict__.items():
             self.__dict__[k] = v.to(device=device, non_blocking=non_blocking)
 
+
 def collate_fn(dataset):
     """
     Collate a list of Data objects and return a Batch.
@@ -128,6 +124,7 @@ def collate_fn(dataset):
         idx=torch.LongTensor(batch.idx),
     )
 
+
 class BaseDataset(Dataset):
     """Dataset of materials properties.
 
@@ -146,11 +143,7 @@ class BaseDataset(Dataset):
     """
 
     def __init__(
-        self, 
-        filename: str | Path, 
-        cutoff=5, 
-        symprec=0.01,
-        graph_type="cutoff"
+        self, filename: str | Path, cutoff=5, symprec=0.01, graph_type="cutoff"
     ):
         self.cutoff = cutoff
         self.data = []
@@ -189,7 +182,7 @@ class BaseDataset(Dataset):
                 target=target,
                 symprec=symprec,
                 idx=idx,
-                graph_type=self.graph_type
+                graph_type=self.graph_type,
             )
             num_nodes += len(data.node_input)
             num_neighbours += len(data.edge_vec)
@@ -205,6 +198,7 @@ class BaseDataset(Dataset):
     def __getitem__(self, idx):
         """Get an item from the dataset."""
         return self.data[idx]
+
 
 def entry_to_atoms(entry):
     """Convert a dataset entry to atoms object."""
@@ -223,7 +217,7 @@ def atoms_to_data(
     include_wyckoffs: bool = False,
     symprec: float = 0.01,
     idx: int = 0,
-    graph_type: str = "cutoff"
+    graph_type: str = "cutoff",
 ):
     """Convert an atoms object to a data object.
 
@@ -249,13 +243,12 @@ def atoms_to_data(
     Data
         A valml Data object.
     """
-    
-    if graph_type=="cutoff":
+    if graph_type == "cutoff":
         # construct edge_src, edge_dst, edge_vec using max cut-off.
         try:
             import numpy as np
             from pymatgen.optimization.neighbors import find_points_in_spheres
-    
+
             positions = atoms.get_positions()
             cell = np.array(atoms.get_cell())
             edge_src, edge_dst, images, _ = find_points_in_spheres(
@@ -280,7 +273,6 @@ def atoms_to_data(
     node_input = torch.Tensor([type_onehot(i) for i in atoms.numbers])
     node_attr = torch.Tensor([mass_onehot(i) for i in atoms.numbers])
 
-    
     return Data(
         node_input=node_input,
         node_attr=node_attr,
@@ -291,6 +283,7 @@ def atoms_to_data(
         target=target,
         idx=idx,
     )
+
 
 def type_onehot(number: int, max_number: int = 118):
     """Onehot encode an atom number into the type encoding."""

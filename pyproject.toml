@@ -131,3 +131,7 @@ isort.known-first-party = ["valml"]
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
 "**/tests/*" = ["D"]
+
+
+[project.scripts]
+anisonet-train = "anisonet.cli:train"
