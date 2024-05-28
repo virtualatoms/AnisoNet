@@ -40,6 +40,8 @@ anisonet-train --name "anisonet" \
 ## Content of AnisoNet
 You can find all source code in `src/anisonet`, all the code to generate the plots used in the paper in `notebooks/plots` and train anisonet from scratch by running `scripts/run_train.sh`.
 
+![Figure 6](notebooks/plots/readme.png "Training data vs new anisotropic discoveries")
+
 ## Citation
 If you use AnisoNet in your work, please cite it as follows:
 ```
