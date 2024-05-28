@@ -1,26 +1,30 @@
-GitHub[https://github.com/virtualatoms/AnisoNet] | Paper [https://arxiv.org/abs/2405.07915]
+[GitHub](https://github.com/virtualatoms/AnisoNet) | [Paper](https://arxiv.org/abs/2405.07915)
 
 AnisoNet is an equivariant graph neural network used to predict the dielectric tensor of crystal materials.
-![Figure 6](notebooks/plots/readme.png "Training data vs new anisotropic discoveries")
-
 
 ## Installation
+
+First clone the repository using
+
 ```
 git clone https://github.com/virtualatoms/AnisoNet.git
+cd AnisoNet
 ```
+
 To install with GPU capability, run
 ```
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install torch --index-url https://download.pytorch.org/whl/cu121
 ```
+
 Then to install the packages, run:
 ```
 pip install -e .
 ```
+
 To train AnisoNet:
 ```
-#!/bin/bash
 anisonet-train --name "anisonet" \
-               --train_file "../dataset/train_dataset.p" \
+               --train_file "dataset/train_dataset.p" \
                --em_dim 48 \
                --layers 2 \
                --lmax 3 \
@@ -30,7 +34,7 @@ anisonet-train --name "anisonet" \
                --wd 0.03 \
                --batch_size 12 \
                --max_epoch 120 \
-               --enable_progress_bar True
+               --enable_progress_bar
 ```
 
 ## Content of AnisoNet
