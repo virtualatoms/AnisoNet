@@ -44,12 +44,12 @@ You can find all source code in `src/anisonet`, all the code to generate the plo
 If you use AnisoNet in your work, please cite it as follows:
 ```
 @misc{lou2024discovery,
-      title={Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks},
-      author={Yuchen Lou and Alex M. Ganose},
-      year={2024},
-      eprint={2405.07915},
-      archivePrefix={arXiv},
-      primaryClass={cond-mat.mtrl-sci}
+    title={Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks},
+    author={Yuchen Lou and Alex M. Ganose},
+    year={2024},
+    eprint={2405.07915},
+    archivePrefix={arXiv},
+    primaryClass={cond-mat.mtrl-sci}
 }
 ```
 
