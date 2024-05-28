@@ -1,10 +1,16 @@
 GitHub[https://github.com/virtualatoms/AnisoNet] | Paper [https://arxiv.org/abs/2405.07915]
 
 AnisoNet is an equivariant graph neural network used to predict the dielectric tensor of crystal materials.
+![Figure 6](notebooks/plots/fig6.pdf "Training data vs new anisotropic discoveries")
+
 
 ## Installation
 ```
 git clone https://github.com/virtualatoms/AnisoNet.git
+```
+To install with GPU capability, run
+```
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 ```
 Then to install the packages, run:
 ```
@@ -33,12 +39,13 @@ You can find all source code in `src/anisonet`, all the code to generate the plo
 ## Citation
 If you use AnisoNet in your work, please cite it as follows:
 ```
-@misc{lou_discovery_2024,
-	title = {Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks},
-	publisher = {arXiv},
-	author = {Lou, Yuchen and Ganose, Alex M.},
-	month = may,
-	year = {2024},
+@misc{lou2024discovery,
+      title={Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks},
+      author={Yuchen Lou and Alex M. Ganose},
+      year={2024},
+      eprint={2405.07915},
+      archivePrefix={arXiv},
+      primaryClass={cond-mat.mtrl-sci}
 }
 ```
 

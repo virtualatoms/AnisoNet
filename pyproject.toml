@@ -25,7 +25,7 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 
-dependencies = ["pymatgen", "torch==2.2.1+cu121", "ase", "click", "e3nn", "lightning"]
+dependencies = ["pymatgen", "torch", "ase", "click", "e3nn", "lightning"]
 
 [project.optional-dependencies]
 train = ["lightning"]
