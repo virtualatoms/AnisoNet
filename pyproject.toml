@@ -25,7 +25,7 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 
-dependencies = ["matminer", "pymatgen", "torch", "ase", "click", "e3nn", "lightning"]
+dependencies = ["pymatgen", "torch==2.2.1+cu121", "ase", "click", "e3nn", "lightning"]
 
 [project.optional-dependencies]
 train = ["lightning"]
@@ -44,8 +44,8 @@ tests = ["pytest-cov==4.1.0", "pytest==7.4.0"]
 strict = ["torch==2.0.1", "ase==3.22.1",  "click==8.1.7", "lightning==2.0.9"]
 
 [project.urls]
-repository = "https://github.com/virtualatoms/valml"
-documentation = "https://virtualatoms.github.io/valml/"
+repository = "https://github.com/virtualatoms/AnisoNet"
+documentation = "https://virtualatoms.github.io/AnisoNet/"
 
 [tool.versioningit.vcs]
 method = "git"

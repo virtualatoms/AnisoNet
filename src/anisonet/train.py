@@ -9,7 +9,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
-from utils_data import collate_fn
+
+from anisonet.data import collate_fn
 
 
 class BaseLightning(pl.LightningModule):

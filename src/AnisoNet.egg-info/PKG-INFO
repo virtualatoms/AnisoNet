@@ -1,0 +1,99 @@
+Metadata-Version: 2.1
+Name: AnisoNet
+Version: 0.0.1.post7+g60f0764.d20240528
+Summary: An equivariant graph neural network to predict dielectric tensors.
+Author-email: "Yuchen Lou, Alex Ganose" <yuchen.lou19@imperial.ac.uk>
+License: MIT
+Project-URL: repository, https://github.com/virtualatoms/AnisoNet
+Project-URL: documentation, https://virtualatoms.github.io/AnisoNet/
+Keywords: chemistry,machine-learning
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: System Administrators
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Other/Nonlisted Topic
+Classifier: Topic :: Scientific/Engineering
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pymatgen
+Requires-Dist: torch
+Requires-Dist: ase
+Requires-Dist: click
+Requires-Dist: e3nn
+Requires-Dist: lightning
+Provides-Extra: train
+Requires-Dist: lightning; extra == "train"
+Provides-Extra: docs
+Requires-Dist: furo==2023.8.19; extra == "docs"
+Requires-Dist: ipython==8.14.0; extra == "docs"
+Requires-Dist: jsonschema[format]; extra == "docs"
+Requires-Dist: myst_parser==2.0.0; extra == "docs"
+Requires-Dist: numpydoc==1.5.0; extra == "docs"
+Requires-Dist: sphinx==7.2.4; extra == "docs"
+Requires-Dist: sphinx-copybutton==0.5.2; extra == "docs"
+Requires-Dist: sphinx_design==0.5.0; extra == "docs"
+Provides-Extra: dev
+Requires-Dist: pre-commit>=2.12.1; extra == "dev"
+Provides-Extra: tests
+Requires-Dist: pytest-cov==4.1.0; extra == "tests"
+Requires-Dist: pytest==7.4.0; extra == "tests"
+Provides-Extra: strict
+Requires-Dist: torch==2.0.1; extra == "strict"
+Requires-Dist: ase==3.22.1; extra == "strict"
+Requires-Dist: click==8.1.7; extra == "strict"
+Requires-Dist: lightning==2.0.9; extra == "strict"
+
+GitHub[https://github.com/virtualatoms/AnisoNet] | Paper [https://arxiv.org/abs/2405.07915]
+
+AnisoNet is an equivariant graph neural network used to predict the dielectric tensor of crystal materials.
+
+## Installation
+```
+git clone https://github.com/virtualatoms/AnisoNet.git
+cd AnisoNet
+```
+Then to install the packages, run:
+```
+pip install -e .
+```
+To train AnisoNet:
+```
+#!/bin/bash
+anisonet-train --name "anisonet" \
+               --train_file "../dataset/train_dataset.p" \
+               --em_dim 48 \
+               --layers 2 \
+               --lmax 3 \
+               --num_basis 15 \
+               --mul 48 \
+               --lr 0.003 \
+               --wd 0.03 \
+               --batch_size 12 \
+               --max_epoch 120 \
+               --enable_progress_bar True
+```
+
+## Content of AnisoNet
+You can find all source code in `src/anisonet`, all the code to generate the plots used in the paper in `notebooks/plots` and train anisonet from scratch by running `scripts/run_train.sh`.
+
+## Citation
+If you use AnisoNet in your work, please cite it as follows:
+```
+@misc{lou_discovery_2024,
+	title = {Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks},
+	urldate = {2024-05-22},
+	publisher = {arXiv},
+	author = {Lou, Yuchen and Ganose, Alex M.},
+	month = may,
+	year = {2024},
+}
+```
+
+## Acknowledgements
+We thank Jason Munro for help with obtaining the dielectric tensor dataset from the Materials Project. A.M.G. was supported by EPSRC Fellowship EP/T033231/1. We are grateful to the UK Materials and Molecular Modelling Hub for computational resources, which are partially funded by EPSRC (EP/T022213/1, EP/W032260/1 and EP/P020194/1). This project made use of time on the Tier 2 HPC facility JADE, funded by EPSRC (EP/P020275/1).

@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+src/AnisoNet.egg-info/PKG-INFO
+src/AnisoNet.egg-info/SOURCES.txt
+src/AnisoNet.egg-info/dependency_links.txt
+src/AnisoNet.egg-info/entry_points.txt
+src/AnisoNet.egg-info/requires.txt
+src/AnisoNet.egg-info/top_level.txt
+src/anisonet/__init__.py
+src/anisonet/cli.py
+src/anisonet/data.py
+src/anisonet/model.py
+src/anisonet/train.py

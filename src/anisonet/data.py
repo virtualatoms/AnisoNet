@@ -147,10 +147,9 @@ class BaseDataset(Dataset):
     ):
         self.cutoff = cutoff
         self.data = []
-        self.graph_type = graph_type
 
         num_nodes = 0
-        num_neighbours = 0
+        num_neighbors = 0
 
         self.structures = []
         self.targets = []
@@ -180,15 +179,13 @@ class BaseDataset(Dataset):
                 atoms,
                 self.cutoff,
                 target=target,
-                symprec=symprec,
                 idx=idx,
-                graph_type=self.graph_type,
             )
             num_nodes += len(data.node_input)
-            num_neighbours += len(data.edge_vec)
+            num_neighbors += len(data.edge_vec)
             self.data.append(data)
 
-        self.num_neigbours = num_neighbours / num_nodes
+        self.num_neighbors = num_neighbors / num_nodes
         self.num_nodes = num_nodes / len(self.data)
 
     def __len__(self):
@@ -214,8 +211,6 @@ def atoms_to_data(
     atoms,
     cutoff,
     target=None,
-    include_wyckoffs: bool = False,
-    symprec: float = 0.01,
     idx: int = 0,
     graph_type: str = "cutoff",
 ):
@@ -229,10 +224,6 @@ def atoms_to_data(
         The cutoff radius for neighbor finding.
     target : list or numpy array
         The target value for the structure.
-    include_wyckoffs : bool
-        Whether to include the wyckoff onehot in the node_inputs.
-    symprec : float
-        Symmetry precision for wyckoff finding.
     idx : int
         Index of the sample.
     type : str
@@ -241,7 +232,7 @@ def atoms_to_data(
     Returns
     -------
     Data
-        A valml Data object.
+        A custom Data object.
     """
     if graph_type == "cutoff":
         # construct edge_src, edge_dst, edge_vec using max cut-off.

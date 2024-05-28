@@ -15,7 +15,6 @@ from anisonet.train import BaseLightning
 
 warnings.filterwarnings("ignore")
 
-torch.multiprocessing.set_sharing_strategy("file_system")
 seed_everything = torch.manual_seed(1234)
 default_dtype = torch.float64
 torch.set_default_dtype(default_dtype)
@@ -71,8 +70,13 @@ torch.set_default_dtype(default_dtype)
 @click.option(
     "--max_epoch", default=120, help="Number of maximum epochs", required=True, type=int
 )
+@click.option("--enable_progress_bar", help="Enable progress bar?", type=bool)
 @click.option(
-    "--enable_progress_bar", default=True, help="Enable progress bar?", type=bool
+    "--distributed",
+    default=False,
+    help="Enable distributed training",
+    type=bool,
+    required=False,  # this is optional but makes the intention clear
 )
 def train(
     name,
@@ -87,6 +91,7 @@ def train(
     batch_size,
     max_epoch,
     enable_progress_bar,
+    distributed,
 ):
     """Train anisonet."""
     click.echo("Starting training with the following parameters:")
@@ -124,15 +129,21 @@ def train(
     )
 
     # Training
-    trainer = Trainer(
-        max_epochs=max_epoch,
-        accelerator="gpu",
-        logger=CSVLogger(".", name=name),
-        enable_progress_bar=enable_progress_bar,
-        strategy="ddp_spawn",
-    )
+    print("Cuda availability is", torch.cuda.is_available())
+    if distributed:
+        torch.multiprocessing.set_sharing_strategy("file_system")
+        trainer = Trainer(
+            max_epochs=max_epoch,
+            accelerator="gpu",
+            logger=CSVLogger(".", name=name),
+            enable_progress_bar=enable_progress_bar,
+            strategy="ddp_spawn",
+        )
+    else:
+        trainer = Trainer(
+            max_epochs=max_epoch,
+            accelerator="gpu",
+            logger=CSVLogger(".", name=name),
+            enable_progress_bar=enable_progress_bar,
+        )
     trainer.fit(model)
-
-
-if __name__ == "__main__":
-    train()
