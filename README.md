@@ -37,8 +37,9 @@ anisonet-train --name "anisonet" \
                --enable_progress_bar
 ```
 
+
 ## Content of AnisoNet
-You can find all source code in `src/anisonet`, all the code to generate the plots used in the paper in `notebooks/plots` and train anisonet from scratch by running `scripts/run_train.sh`.
+You can find all source code in `src/anisonet`, all the code to generate the plots used in the paper in `notebooks/plots` and train anisonet from scratch by running `scripts/run_train.sh`. To use AnisoNet to predict dielectric tensors, follow `predict.ipynb` in notebooks. The trained model are hosted on figshare [https://figshare.com/articles/software/anisonet-stock_ckpt/262709740].
 
 ![Figure 6](notebooks/plots/readme.png "Training data vs new anisotropic discoveries")
 
