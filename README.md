@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.12734234.svg)](http://dx.doi.org/10.5281/zenodo.12734234)
 
-[GitHub](https://github.com/virtualatoms/AnisoNet) | [Paper](https://arxiv.org/abs/2405.07915) 
+[GitHub](https://github.com/virtualatoms/AnisoNet) | [Paper](https://arxiv.org/abs/2405.07915) | [Trained Model](https://figshare.com/articles/software/anisonet-stock_ckpt/26270974)
 
 
 AnisoNet is an equivariant graph neural network used to predict the dielectric tensor of crystal materials.
