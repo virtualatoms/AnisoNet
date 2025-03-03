@@ -126,7 +126,6 @@ ignore = [
     "B019",  # `functools.lru_cache`
 ]
 pydocstyle.convention = "numpy"
-isort.known-first-party = ["valml"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
