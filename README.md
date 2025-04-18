@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.12734234.svg)](http://dx.doi.org/10.5281/zenodo.12734234)
 
-[GitHub](https://github.com/virtualatoms/AnisoNet) | [Paper](https://arxiv.org/abs/2405.07915) | [Trained Model](https://figshare.com/articles/software/anisonet-stock_ckpt/26270974)
+[GitHub](https://github.com/virtualatoms/AnisoNet) | [Paper](https://pubs.rsc.org/en/content/articlehtml/2024/fd/d4fd00096j) | [Trained Model](https://figshare.com/articles/software/anisonet-stock_ckpt/26270974)
 
 
 AnisoNet is an equivariant graph neural network used to predict the dielectric tensor of crystal materials.
@@ -49,14 +49,21 @@ You can find all source code in `src/anisonet`, all the code to generate the plo
 ## Citation
 If you use AnisoNet in your work, please cite it as follows:
 ```
-@misc{lou2024discovery,
-    title={Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks},
-    author={Yuchen Lou and Alex M. Ganose},
-    year={2024},
-    eprint={2405.07915},
-    archivePrefix={arXiv},
-    primaryClass={cond-mat.mtrl-sci}
+@article{lou_discovery_2025,
+  title = {Discovery of Highly Anisotropic Dielectric Crystals with Equivariant Graph Neural Networks},
+  author = {Yuchen Lou and Alex M. Ganose},
+  year = {2025},
+  journaltitle = {Faraday Discussions},
+  volume = {256},
+  number = {0},
+  pages = {255--274},
+  publisher = {Royal Society of Chemistry},
+  doi = {10.1039/D4FD00096J},
+  url = {https://pubs.rsc.org/en/content/articlelanding/2025/fd/d4fd00096j},
 }
+
+Lou, Y., & M. Ganose, A. (2025). Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks. Faraday Discussions, 256(0), 255–274. https://doi.org/10.1039/D4FD00096J
+
 ```
 
 ## Acknowledgements
