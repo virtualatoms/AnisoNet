@@ -37,7 +37,7 @@ anisonet-train --name "anisonet" \
                --wd 0.03 \
                --batch_size 12 \
                --max_epoch 120 \
-               --enable_progress_bar
+               --enable_progress_bar True
 ```
 
 
