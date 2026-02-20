@@ -47,23 +47,19 @@ You can find all source code in `src/anisonet`, all the code to generate the plo
 ![Figure 6](notebooks/plots/readme.png "Training data vs new anisotropic discoveries")
 
 ## Citation
-If you use AnisoNet in your work, please cite it as follows:
+If you use AnisoNet in your work, please cite the [following article](https://doi.org/10.1039/D4FD00096J).
 ```
 @article{lou_discovery_2025,
   title = {Discovery of Highly Anisotropic Dielectric Crystals with Equivariant Graph Neural Networks},
   author = {Yuchen Lou and Alex M. Ganose},
   year = {2025},
-  journaltitle = {Faraday Discussions},
+  journal = {Faraday Discussions},
   volume = {256},
   number = {0},
   pages = {255--274},
-  publisher = {Royal Society of Chemistry},
   doi = {10.1039/D4FD00096J},
   url = {https://pubs.rsc.org/en/content/articlelanding/2025/fd/d4fd00096j},
 }
-
-Lou, Y., & M. Ganose, A. (2025). Discovery of highly anisotropic dielectric crystals with equivariant graph neural networks. Faraday Discussions, 256(0), 255–274. https://doi.org/10.1039/D4FD00096J
-
 ```
 
 ## Acknowledgements
